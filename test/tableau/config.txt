@@ -1,0 +1,8 @@
+tableau
+colonnes : 3
+
+nom : "Nom"
+prenom : "Prenom"
+email : "Adresse de courriel"
+
+format : "PDF"

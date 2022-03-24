@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo_log() {
+    date_log=$(date +"[%d/%m/%Y %H:%M:%S]")
+    echo -e "$date_log \e[34mINFO\e[0m $1"
+}
+echo_err() {
+    date_log=$(date +"[%d/%m/%Y %H:%M:%S]")
+    echo -e "$date_log \e[31mERREUR\e[0m $1"
+}
+
+_docker () {
+    sudo docker $@
+}
+
+mkdir -p out_dir
+rm -f out_dir/*
+_docker container cp sae103-conversion:/data/etape3/. out_dir
+
+a=$(ls out_dir | wc -l)
+if [ $a -gt 0 ];then
+    if [ -f out_dir/error.txt ];then
+        cat out_dir/error.txt 
+    fi
+
+    echo_log "Fichiers récupérés dans out_dir"
+else 
+    echo_err "La chaine d'exécution n'est pas encore terminée ou n'a jamais été lancée."
+fi

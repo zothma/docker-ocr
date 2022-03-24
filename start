@@ -1,0 +1,47 @@
+#!/bin/bash
+
+_volume="sae103" # Nom du volume
+
+_docker () {
+    sudo docker $@ > /dev/null
+}
+
+echo_log() {
+    date_log=$(date +"[%d/%m/%Y %H:%M:%S]")
+    echo -e "$date_log \e[34mINFO\e[0m $1"
+}
+
+#création du volume principal
+echo_log "Création du volume $_volume"
+_docker volume create $_volume # création du volume
+
+#telechargement des images
+for image in tesseract php-cli74 weasyprint
+do
+    echo_log "Téléchargement de l'image $image..."
+    _docker image pull bigpapoo/$image > /dev/null
+done
+
+#installation des scripts
+echo_log "Installation des scripts dans le volume"
+cd src
+_docker container run -d --name sae103-tmp -v sae103:/data bigpapoo/php-cli74 tail -f /dev/null
+_docker cp extraction.php sae103-tmp:/data
+_docker cp tesseract.sh sae103-tmp:/data
+_docker cp conversion.sh sae103-tmp:/data
+_docker cp modele.php sae103-tmp:/data
+_docker container exec sae103-tmp mkdir etape1 etape2 etape3
+cd ..
+
+#fin de l'installation
+echo_log "Fin de l'installation"
+_docker container stop sae103-tmp > /dev/null    #arret du container temporaire
+_docker container rm sae103-tmp > /dev/null      #supprission du container tempoire
+
+#lancement des conteneurs
+echo_log "Lancement des conteneurs"
+_docker container run -d --name sae103-tesseract -w /data -v sae103:/data bigpapoo/tesseract ./tesseract.sh
+_docker container run -d --name sae103-extraction -w /data -v sae103:/data bigpapoo/php-cli74 php extraction.php
+_docker container run -d --name sae103-conversion -w /data -v sae103:/data bigpapoo/weasyprint ./conversion.sh
+
+echo_log "Pret"

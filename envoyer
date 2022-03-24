@@ -1,0 +1,14 @@
+#!/bin/bash
+
+_docker () {
+    sudo docker $@ > /dev/null
+}
+
+echo_log() {
+    date_log=$(date +"[%d/%m/%Y %H:%M:%S]")
+    echo -e "$date_log \e[34mINFO\e[0m $1"
+}
+
+echo_log "Envoi du fichier $1 en début de chaîne"
+
+_docker container cp $1 sae103-tesseract:/data/etape1

@@ -1,0 +1,7 @@
+nom : "last_name"
+prenom : "first_name"
+adresse : "address"
+email
+telephone
+
+format : "HTML"

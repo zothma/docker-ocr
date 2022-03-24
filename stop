@@ -1,0 +1,19 @@
+#!/bin/bash
+echo_log() {
+    date_log=$(date +"[%d/%m/%Y %H:%M:%S]")
+    echo -e "$date_log \e[34mINFO\e[0m $1"
+}
+
+_docker () {
+    sudo docker $@
+}
+
+for conteneur in tesseract extraction conversion
+do
+    echo_log "Arrêt du conteneur $conteneur"
+    _docker container stop "sae103-$conteneur" > /dev/null
+    _docker container rm "sae103-$conteneur" > /dev/null
+done
+
+echo_log "Suppression du volume"
+_docker volume rm sae103 > /dev/null
