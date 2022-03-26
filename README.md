@@ -12,7 +12,7 @@ Le premier conteneur se sert de la technologie de reconnaissance de caractères 
 
 ## Documentation
 
-Pour plus d'informations sur le fonctionnement, regarder la [documentation](documentation.pdf)
+Pour plus d'informations sur le fonctionnement, regarder la [documentation](documentation.md)
 
 ## Équipe
  - Enzo MAROS (Chef de Projet)
